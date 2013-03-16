@@ -14,7 +14,7 @@ function Ant(xPos, yPos)
             this.returnHome(grid);
         else
             this.explore(grid);
-    }
+    };
 
     this.returnHome = function(grid)
     {
@@ -24,7 +24,7 @@ function Ant(xPos, yPos)
         yPos = nextPos[1];
         if(pathOut.length == 0)
             returning = false;
-    }
+    };
 
     this.explore = function(grid)
     {
@@ -87,7 +87,7 @@ function Ant(xPos, yPos)
 
         if(grid.getFoodValue(xPos, yPos) > 0)
             returning = true;
-    }
+    };
 
     var curReturnIndex;
     var returning = false;
