@@ -12,7 +12,11 @@ function AntsGrid(xSize, ySize)
     {
         for(var i in pheremoneValues)
         {
-            pheremoneValues[i] -= constants.EVAPORATION_RATE;
+            var curVal = pheremoneValues[i];
+            if(curVal >= constants.EVAPORATION_RATE)
+                pheremoneValues[i] -= constants.EVAPORATION_RATE;
+            else if(curVal < constants.EVAPORATION_RATE && curVal > 0)
+                pheremoneValues[i] = 0;
         }
     }
 
@@ -32,9 +36,10 @@ function AntsGrid(xSize, ySize)
     {
         var retVal = new Array(constants.NUM_SURROUNDING_POSITIONS);
         retVal[constants.UP_INDEX] = this.getPosPheremoneValue(xPos, yPos - 1);
-        retVal[constants.RIGHT_INDEX] = this.getPosPheremoneValue(xPos, yPos);
-        retVal[constants.DOWN_INDEX] = this.getPosPheremoneValue(xPos, yPos);
-        retVal[constants.LEFT_INDEX] = this.getPosPheremoneValue(xPos, yPos);
+        retVal[constants.RIGHT_INDEX] = this.getPosPheremoneValue(xPos+1, yPos);
+        retVal[constants.DOWN_INDEX] = this.getPosPheremoneValue(xPos, yPos+1);
+        retVal[constants.LEFT_INDEX] = this.getPosPheremoneValue(xPos-1, yPos);
+        return retVal;
     }
 
     this.changePosPheremoneValue = function(xPos, yPos, delta)
@@ -50,30 +55,34 @@ function AntsGrid(xSize, ySize)
         pheremoneValues[posIndex] = newVal;
     }
 
-    this.changeFoodValue = function(xPos, yPos, delta)
+    this.changePosFoodValue = function(xPos, yPos, delta)
     {
         var posIndex = this.getPosIndex(xPos, yPos);
         foodValues[posIndex] += delta;
     }
 
-    this.getFoodValue = function(xPos, yPos)
+    this.getPosFoodValue = function(xPos, yPos)
     {
+        if(!this.doesPosExist(xPos, yPos))
+            return constants.NON_EXISTANT_SPACE;
         return foodValues[this.getPosIndex(xPos, yPos)];
     }
 
     this.doesPosExist = function(xPos, yPos)
     {
-        return this.getPosIndex(xPos, yPos) >= pheremoneValues.length;
+        var pos = this.getPosIndex(xPos, yPos);
+        return pos >= 0 && pos < pheremoneValues.length;
     }
 
-    var pheremoneValues = new Array(getPosIndex(xSize, ySize) + 1);
-    var foodValues = new Array(getPosIndex(xSize, ySize) + 1);
+    var numSpaces = this.getPosIndex(xSize - 1, ySize - 1) + 1;
+    var pheremoneValues = new Array(numSpaces);
+    var foodValues = new Array(numSpaces);
 
-    for(var i in pheremoneValues)
+    for(var i=0; i<numSpaces; i++)
+    {
         pheremoneValues[i] = 0;
-
-    for(var i in foodValues)
-        pheremoneValues[i] = 0;
+        foodValues[i] = 0;
+    }
 }
 
 if(usingNode)
