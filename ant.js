@@ -19,10 +19,8 @@ function Ant(xPos, yPos)
 
     this.returnHome = function(grid)
     {
-        if(pathOut.length == 0)
+        if(xPos == constants.GRID_X_CENTER && yPos == constants.GRID_Y_CENTER)
             returning = false;
-
-        var nextPos = pathOut.pop();
 
         grid.changeAreaPheremoneValueDecay(
             xPos,
@@ -31,8 +29,14 @@ function Ant(xPos, yPos)
             constants.PHEREMONE_DISPERSE_DECAY
         );
 
-        xPos = nextPos[0];
-        yPos = nextPos[1];
+        if(xPos > constants.GRID_X_CENTER)
+            xPos--;
+        if(xPos < constants.GRID_X_CENTER)
+            xPos++;
+        if(yPos > constants.GRID_Y_CENTER)
+            yPos--;
+        if(yPos < constants.GRID_Y_CENTER)
+            yPos++;
     };
 
     this.explore = function(grid, randVal)
@@ -42,14 +46,13 @@ function Ant(xPos, yPos)
         var weightedRand;
         var totalPheremoneValue;
 
-        var availableSpacesInfo = this.findAvailableSpaces(grid);
+        var availableSpacesInfo = this.findAvailableSpaces(grid, true);
         totalPheremoneValue = availableSpacesInfo[0];
         availableSpaces = availableSpacesInfo[1];
 
         if(availableSpaces.length == 0)
             return;
 
-        pathOut.push([xPos, yPos]);
         recentLocs.push(grid.getPosIndex(xPos, yPos));
 
         weightedRand = randVal * totalPheremoneValue;
@@ -66,7 +69,7 @@ function Ant(xPos, yPos)
         this.checkForFood(grid);
     };
 
-    this.findAvailableSpaces = function(grid)
+    this.findAvailableSpaces = function(grid, checkingRecent)
     {
         var surroundingValues = grid.getSurroundingPheremoneValues(xPos, yPos);
         var availableSpaces = new Array();
@@ -87,21 +90,45 @@ function Ant(xPos, yPos)
             availableSpaces.push([totalPheremoneValue, index]);
         }
 
-        if(recentLocs.indexOf(grid.getPosIndex(xPos, yPos-1)) == -1)
+        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos, yPos-1)) == -1)
             includeSpace(constants.UP_INDEX);
-        if(recentLocs.indexOf(grid.getPosIndex(xPos+1, yPos)) == -1)
+        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos+1, yPos)) == -1)
             includeSpace(constants.RIGHT_INDEX);
-        if(recentLocs.indexOf(grid.getPosIndex(xPos, yPos+1)) == -1)
+        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos, yPos+1)) == -1)
             includeSpace(constants.DOWN_INDEX);
-        if(recentLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
+        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
             includeSpace(constants.LEFT_INDEX);
 
-        return [totalPheremoneValue, availableSpaces];
+        if(availableSpaces.length > 0 || !checkingRecent)
+            return [totalPheremoneValue, availableSpaces];
+        else
+            return this.findAvailableSpaces(grid, false);
     };
 
     this.moveDirection = function(direction)
     {
+        if(facingDirection == -1)
+            facingDirection = direction;
+
         switch(direction)
+        {
+        case constants.UP_INDEX:
+            this.faceUp();
+            break;
+        case constants.RIGHT_INDEX:
+            this.faceRight();
+            break;
+        case constants.DOWN_INDEX:
+            this.faceDown();
+            break;
+        case constants.LEFT_INDEX:
+            this.faceLeft();
+            break;
+        default:
+            throw "No direction selected for ant";
+        }
+
+        switch(facingDirection)
         {
         case constants.UP_INDEX:
             yPos--;
@@ -120,12 +147,50 @@ function Ant(xPos, yPos)
         }
     };
 
+    this.faceUp = function()
+    {
+        if(facingDirection == constants.DOWN_INDEX)
+            facingDirection = Math.random() < 0.5 ? constants.LEFT_INDEX : constants.RIGHT_INDEX;
+        else
+            facingDirection = constants.UP_INDEX;
+    }
+
+    this.faceRight = function()
+    {
+        if(facingDirection == constants.LEFT_INDEX)
+            facingDirection = Math.random() < 0.5 ? constants.UP_INDEX : constants.DOWN_INDEX;
+        else
+            facingDirection = constants.RIGHT_INDEX;
+    }
+
+    this.faceDown = function()
+    {
+        if(facingDirection == constants.UP_INDEX)
+            facingDirection = Math.random() < 0.5 ? constants.LEFT_INDEX : constants.RIGHT_INDEX;
+        else
+            facingDirection = constants.DOWN_INDEX;
+    }
+
+    this.faceLeft = function()
+    {
+        if(facingDirection == constants.RIGHT_INDEX)
+            facingDirection = Math.random() < 0.5 ? constants.UP_INDEX : constants.DOWN_INDEX;
+        else
+            facingDirection = constants.LEFT_INDEX;
+    }
+
     this.checkForFood = function(grid)
     {
-        if(grid.getPosFoodValue(xPos, yPos) > 0)
+        for(var y=yPos-2; y<yPos+2; y++)
         {
-            grid.changePosFoodValue(xPos, yPos, -1);
-            returning = true;
+            for(var x=xPos-2; x<xPos+2; x++)
+            {
+                if(grid.getPosFoodValue(x, y) > 0)
+                {
+                    grid.changePosFoodValue(x, y, -1);
+                    returning = true;
+                }
+            }
         }
     };
 
@@ -144,24 +209,14 @@ function Ant(xPos, yPos)
         returning = newReturning;
     };
 
-    this.debugPushToPathOut = function(newPos)
-    {
-        pathOut.push(newPos);
-    };
-
-    this.debugGetPathOut = function()
-    {
-        return pathOut;
-    }
-
     this.debugIsReturning = function()
     {
         return returning;
     };
 
     var returning = false;
-    var pathOut = new Array();
-    var recentLocs = new cbuffer.CBuffer(3);
+    var recentLocs = new cbuffer.CBuffer(5);
+    var facingDirection = -1;
 }
 
 if(usingNode)

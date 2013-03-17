@@ -15,7 +15,7 @@ function AntsGrid(xSize, ySize)
             var curVal = pheremoneValues[i];
             if(curVal >= constants.EVAPORATION_RATE)
                 pheremoneValues[i] -= constants.EVAPORATION_RATE;
-            else if(curVal < constants.EVAPORATION_RATE && curVal > 0)
+            else if(curVal < constants.EVAPORATION_RATE)
                 pheremoneValues[i] = 0;
         }
     };
