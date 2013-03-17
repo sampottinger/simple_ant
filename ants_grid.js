@@ -1,5 +1,5 @@
 var usingNode = typeof window === 'undefined';
-var ant_grid = {};
+var ants_grid = {};
 
 if(usingNode)
 {
@@ -128,5 +128,5 @@ if(usingNode)
 }
 else
 {
-    ant_grid.AntsGrid = AntsGrid;
+    ants_grid.AntsGrid = AntsGrid;
 }

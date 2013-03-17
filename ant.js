@@ -4,6 +4,7 @@ var ant = {};
 if(usingNode)
 {
     var constants = require("./constants");
+    var cbuffer = require("./cbuffer");
 }
 
 function Ant(xPos, yPos)
@@ -49,12 +50,12 @@ function Ant(xPos, yPos)
             return;
 
         pathOut.push([xPos, yPos]);
+        recentLocs.push(grid.getPosIndex(xPos, yPos));
 
         weightedRand = randVal * totalPheremoneValue;
         for(var i in availableSpaces)
         {
-            weightedRand -= availableSpaces[i][0];
-            if(weightedRand <= 0)
+            if(weightedRand < availableSpaces[i][0])
             {
                 selectedDirection = availableSpaces[i][1];
                 break;
@@ -78,18 +79,22 @@ function Ant(xPos, yPos)
             if(surroundingValue < 0)
                 return;
 
-            availableSpaces.push([totalPheremoneValue, index]);
-
             if(surroundingValue == 0)
                 totalPheremoneValue += constants.MIN_PHEREMONE_VALUE_CHANCE;
             else
                 totalPheremoneValue += surroundingValue;
+
+            availableSpaces.push([totalPheremoneValue, index]);
         }
 
-        includeSpace(constants.UP_INDEX);
-        includeSpace(constants.RIGHT_INDEX);
-        includeSpace(constants.DOWN_INDEX);
-        includeSpace(constants.LEFT_INDEX);
+        if(recentLocs.indexOf(grid.getPosIndex(xPos, yPos-1)) == -1)
+            includeSpace(constants.UP_INDEX);
+        if(recentLocs.indexOf(grid.getPosIndex(xPos+1, yPos)) == -1)
+            includeSpace(constants.RIGHT_INDEX);
+        if(recentLocs.indexOf(grid.getPosIndex(xPos, yPos+1)) == -1)
+            includeSpace(constants.DOWN_INDEX);
+        if(recentLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
+            includeSpace(constants.LEFT_INDEX);
 
         return [totalPheremoneValue, availableSpaces];
     };
@@ -156,6 +161,7 @@ function Ant(xPos, yPos)
 
     var returning = false;
     var pathOut = new Array();
+    var recentLocs = new cbuffer.CBuffer(3);
 }
 
 if(usingNode)

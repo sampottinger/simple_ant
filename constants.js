@@ -18,13 +18,14 @@ var DOWN_INDEX = 2;
 var LEFT_INDEX = 3;
 var NUM_SURROUNDING_POSITIONS = 4;
 
-var NUM_ANTS = 100;
+var NUM_ANTS = 200;
 var GRID_X_CENTER = 150;
 var GRID_Y_CENTER = 150;
 var GRID_WIDTH = 300;
 var GRID_HEIGHT = 300;
 var INITAL_FOOD_SOURCE_SIZE = 20;
-var STEP_DUR = 20;
+var STEP_DUR = 50;
+var NUM_FOOD_SOURCES = 20;
 
 var DISPLAY_CANVAS_ID = "#display-canvas";
 
@@ -49,6 +50,8 @@ if(usingNode)
     exports.GRID_HEIGHT = GRID_HEIGHT;
     exports.INITAL_FOOD_SOURCE_SIZE = INITAL_FOOD_SOURCE_SIZE;
     exports.STEP_DUR = STEP_DUR;
+    exports.DISPLAY_CANVAS_ID = DISPLAY_CANVAS_ID;
+    exports.NUM_FOOD_SOURCES = NUM_FOOD_SOURCES;
 }
 else
 {
@@ -71,4 +74,6 @@ else
     constants.GRID_HEIGHT = GRID_HEIGHT;
     constants.INITAL_FOOD_SOURCE_SIZE = INITAL_FOOD_SOURCE_SIZE;
     constants.STEP_DUR = STEP_DUR;
+    constants.DISPLAY_CANVAS_ID = DISPLAY_CANVAS_ID;
+    constants.NUM_FOOD_SOURCES = NUM_FOOD_SOURCES;
 }
