@@ -13,50 +13,44 @@ function Ant(xPos, yPos)
         if(returning)
             this.returnHome(grid);
         else
-            this.explore(grid);
+            this.explore(grid, Math.random());
     };
 
     this.returnHome = function(grid)
     {
-        grid.changeFoodValue(xPos, yPos, constants.ANT_ADD_PHEREMONE_AMT);
-        var nextPos = pathOut.pop();
-        xPos = nextPos[0];
-        yPos = nextPos[1];
         if(pathOut.length == 0)
             returning = false;
+
+        var nextPos = pathOut.pop();
+
+        grid.changeAreaPheremoneValueDecay(
+            xPos,
+            yPos,
+            constants.ANT_ADD_PHEREMONE_AMT,
+            constants.PHEREMONE_DISPERSE_DECAY
+        );
+
+        xPos = nextPos[0];
+        yPos = nextPos[1];
     };
 
-    this.explore = function(grid)
+    this.explore = function(grid, randVal)
     {
-        var surroundingValues = grid.getSurroundingValues(xPos, yPos);
-        var availableSpaces = new Array();
-        var totalPheremoneValue = 0;
-        var availableSpacesCount = 0;
         var selectedDirection = -1;
+        var availableSpaces;
+        var weightedRand;
+        var totalPheremoneValue;
 
-        var includeSpace = function(index)
-        {
-            var surroundingValue = surroundingValues[index];
+        var availableSpacesInfo = this.findAvailableSpaces(grid);
+        totalPheremoneValue = availableSpacesInfo[0];
+        availableSpaces = availableSpacesInfo[1];
 
-            if(surroundingValue < 0)
-                return;
-
-            availableSpaces.push([totalPheremoneValue, index]);
-            totalPheremoneValue += constants.MIN_PHEREMONE_VALUE_CHANCE;
-            availableSpacesCount++;
-        }
-
-        includeSpace(constants.UP_INDEX);
-        includeSpace(constants.RIGHT_INDEX);
-        includeSpace(constants.DOWN_INDEX);
-        includeSpace(constants.LEFT_INDEX);
-
-        if(availableSpacesCount <= 0)
+        if(availableSpaces.length == 0)
             return;
 
         pathOut.push([xPos, yPos]);
 
-        var weightedRand = Math.random() * totalPheremoneValue;
+        weightedRand = randVal * totalPheremoneValue;
         for(var i in availableSpaces)
         {
             weightedRand -= availableSpaces[i][0];
@@ -67,7 +61,42 @@ function Ant(xPos, yPos)
             }
         }
 
-        switch(selectedDirection)
+        this.moveDirection(selectedDirection);
+        this.checkForFood(grid);
+    };
+
+    this.findAvailableSpaces = function(grid)
+    {
+        var surroundingValues = grid.getSurroundingPheremoneValues(xPos, yPos);
+        var availableSpaces = new Array();
+        var totalPheremoneValue = 0;
+
+        var includeSpace = function(index)
+        {
+            var surroundingValue = surroundingValues[index];
+
+            if(surroundingValue < 0)
+                return;
+
+            availableSpaces.push([totalPheremoneValue, index]);
+
+            if(surroundingValue == 0)
+                totalPheremoneValue += constants.MIN_PHEREMONE_VALUE_CHANCE;
+            else
+                totalPheremoneValue += surroundingValue;
+        }
+
+        includeSpace(constants.UP_INDEX);
+        includeSpace(constants.RIGHT_INDEX);
+        includeSpace(constants.DOWN_INDEX);
+        includeSpace(constants.LEFT_INDEX);
+
+        return [totalPheremoneValue, availableSpaces];
+    };
+
+    this.moveDirection = function(direction)
+    {
+        switch(direction)
         {
         case constants.UP_INDEX:
             yPos--;
@@ -84,12 +113,47 @@ function Ant(xPos, yPos)
         default:
             throw "No direction selected for ant";
         }
-
-        if(grid.getFoodValue(xPos, yPos) > 0)
-            returning = true;
     };
 
-    var curReturnIndex;
+    this.checkForFood = function(grid)
+    {
+        if(grid.getPosFoodValue(xPos, yPos) > 0)
+        {
+            grid.changePosFoodValue(xPos, yPos, -1);
+            returning = true;
+        }
+    };
+
+    this.getXPos = function()
+    {
+        return xPos;
+    };
+
+    this.getYPos = function()
+    {
+        return yPos;
+    };
+
+    this.debugSetState = function(newReturning)
+    {
+        returning = newReturning;
+    };
+
+    this.debugPushToPathOut = function(newPos)
+    {
+        pathOut.push(newPos);
+    };
+
+    this.debugGetPathOut = function()
+    {
+        return pathOut;
+    }
+
+    this.debugIsReturning = function()
+    {
+        return returning;
+    };
+
     var returning = false;
     var pathOut = new Array();
 }

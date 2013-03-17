@@ -101,6 +101,16 @@ function AntsGrid(xSize, ySize)
         }
     };
 
+    this.getXSize = function()
+    {
+        return xSize;
+    };
+
+    this.getYSize = function()
+    {
+        return ySize;
+    };
+
     var numSpaces = this.getPosIndex(xSize - 1, ySize - 1) + 1;
     var pheremoneValues = new Array(numSpaces);
     var foodValues = new Array(numSpaces);

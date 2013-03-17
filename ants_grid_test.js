@@ -1,26 +1,6 @@
 var constants = require("./constants");
 var ants_grid = require("./ants_grid");
-
-var testFloatEqual = function(test, recieved, expected)
-{
-    test.ok(Math.abs(recieved-expected) < 0.001);
-}
-
-var createTestGrid = function()
-{
-    var grid = new ants_grid.AntsGrid(3, 3);
-    grid.changePosPheremoneValue(0, 0, 0.1);
-    grid.changePosPheremoneValue(1, 0, 0.2);
-    grid.changePosPheremoneValue(2, 0, 0.3);
-    grid.changePosPheremoneValue(0, 1, 0.4);
-    grid.changePosPheremoneValue(1, 1, 0.5);
-    grid.changePosPheremoneValue(2, 1, 0.6);
-    grid.changePosPheremoneValue(0, 2, 0.7);
-    grid.changePosPheremoneValue(1, 2, 0.8);
-    grid.changePosPheremoneValue(2, 2, 0.9);
-
-    return grid;
-}
+var test_util = require("./test_util");
 
 exports.testSimplePheremoneValue = function(test)
 {
@@ -33,7 +13,7 @@ exports.testSimplePheremoneValue = function(test)
     test.equal(grid.getPosPheremoneValue(1, 0), constants.NON_EXISTANT_SPACE);
 
     test.done();
-}
+};
 
 exports.testSimpleFoodValue = function(test)
 {
@@ -46,7 +26,7 @@ exports.testSimpleFoodValue = function(test)
     test.equal(grid.getPosFoodValue(1, 0), constants.NON_EXISTANT_SPACE);
 
     test.done();
-}
+};
 
 exports.testEvaporate = function(test)
 {
@@ -67,7 +47,7 @@ exports.testEvaporate = function(test)
 
 exports.testGetSurroundingPheremoneValues = function(test)
 {
-    var grid = createTestGrid();
+    var grid = test_util.createTestGrid();
 
     var surrounding = grid.getSurroundingPheremoneValues(1, 1);
     test.equal(surrounding[constants.UP_INDEX], 0.2);
@@ -76,11 +56,11 @@ exports.testGetSurroundingPheremoneValues = function(test)
     test.equal(surrounding[constants.LEFT_INDEX], 0.4);
 
     test.done();
-}
+};
 
 exports.testGetSurroundingPheremoneValuesEdge = function(test)
 {
-    var grid = createTestGrid();
+    var grid = test_util.createTestGrid();
 
     var surrounding = grid.getSurroundingPheremoneValues(0, 0);
     test.equal(surrounding[constants.UP_INDEX], constants.NON_EXISTANT_SPACE);
@@ -89,43 +69,43 @@ exports.testGetSurroundingPheremoneValuesEdge = function(test)
     test.equal(surrounding[constants.LEFT_INDEX], constants.NON_EXISTANT_SPACE);
 
     test.done();
-}
+};
 
 exports.testChangeAreaPheremoneValue = function(test)
 {
-    var grid = createTestGrid();
+    var grid = test_util.createTestGrid();
     grid.changeAreaPheremoneValue(1, 1, 0.1, 1);
 
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 0), 0.2);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 0), 0.3);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 0), 0.4);
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 1), 0.5);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 1), 0.6);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 1), 0.7);
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 2), 0.8);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 2), 0.9);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 2), 1.0);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 0), 0.2);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 0), 0.3);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 0), 0.4);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 1), 0.5);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 1), 0.6);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 1), 0.7);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 2), 0.8);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 2), 0.9);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 2), 1.0);
 
     test.done();
-}
+};
 
 exports.testChangeAreaPheremoneValueEdge = function(test)
 {
-    var grid = createTestGrid();
+    var grid = test_util.createTestGrid();
     grid.changeAreaPheremoneValue(0, 0, 0.1, 1);
 
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 0), 0.2);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 0), 0.3);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 0), 0.3);
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 1), 0.5);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 1), 0.6);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 1), 0.6);
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 2), 0.7);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 2), 0.8);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 2), 0.9);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 0), 0.2);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 0), 0.3);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 0), 0.3);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 1), 0.5);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 1), 0.6);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 1), 0.6);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 2), 0.7);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 2), 0.8);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 2), 0.9);
 
     test.done();
-}
+};
 
 exports.testChangeAreaPheremoneValueDecay = function(test)
 {
@@ -133,13 +113,13 @@ exports.testChangeAreaPheremoneValueDecay = function(test)
 
     grid.changeAreaPheremoneValueDecay(3, 3, 0.3, 0.1);
 
-    testFloatEqual(test, grid.getPosPheremoneValue(0, 3), 0);
-    testFloatEqual(test, grid.getPosPheremoneValue(1, 3), 0.1);
-    testFloatEqual(test, grid.getPosPheremoneValue(2, 3), 0.2);
-    testFloatEqual(test, grid.getPosPheremoneValue(3, 3), 0.3);
-    testFloatEqual(test, grid.getPosPheremoneValue(4, 3), 0.2);
-    testFloatEqual(test, grid.getPosPheremoneValue(5, 3), 0.1);
-    testFloatEqual(test, grid.getPosPheremoneValue(6, 3), 0);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(0, 3), 0);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(1, 3), 0.1);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(2, 3), 0.2);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(3, 3), 0.3);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(4, 3), 0.2);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(5, 3), 0.1);
+    test_util.testFloatEqual(test, grid.getPosPheremoneValue(6, 3), 0);
 
     test.done();
-}
+};
