@@ -27,6 +27,8 @@ var INITAL_FOOD_SOURCE_SIZE = 50;
 var STEP_DUR = 50;
 var NUM_FOOD_SOURCES = 30;
 
+var FOOD_RAD = 2;
+
 var DISPLAY_CANVAS_ID = "#display-canvas";
 
 if(usingNode)
@@ -52,6 +54,7 @@ if(usingNode)
     exports.STEP_DUR = STEP_DUR;
     exports.DISPLAY_CANVAS_ID = DISPLAY_CANVAS_ID;
     exports.NUM_FOOD_SOURCES = NUM_FOOD_SOURCES;
+    exports.FOOD_RAD = FOOD_RAD;
 }
 else
 {
@@ -76,4 +79,5 @@ else
     constants.STEP_DUR = STEP_DUR;
     constants.DISPLAY_CANVAS_ID = DISPLAY_CANVAS_ID;
     constants.NUM_FOOD_SOURCES = NUM_FOOD_SOURCES;
+    constants.FOOD_RAD = FOOD_RAD;
 }

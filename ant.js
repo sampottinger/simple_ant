@@ -1,5 +1,15 @@
+/**
+ * Logic for an ant-inspired automaton.
+ * 
+ * Logic for a pheremone-based internally optimizing resource gathering network.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
 var usingNode = typeof window === 'undefined';
 var ant = {};
+
 
 if(usingNode)
 {
@@ -7,8 +17,23 @@ if(usingNode)
     var cbuffer = require("./cbuffer");
 }
 
+
+/**
+ * Ant automaton.
+ *
+ * Ant automaton that follows and lays pheromone trails. Agent part of a larger
+ * complex adaptive system for internally optimizing food gathering structure.
+ * 
+ * @param {int} xPos: The x position to create the ant at.
+ * @param {int} yPos: The y position to create the ant at.
+**/
 function Ant(xPos, yPos)
 {
+    /**
+     * Take a step, either in finding food or bringing food back to nest.
+     *
+     * @param {ants_grid.AntsGrid} grid The grid to take a step on.
+    **/
     this.takeStep = function(grid)
     {
         if(returning)
@@ -17,6 +42,14 @@ function Ant(xPos, yPos)
             this.explore(grid, Math.random());
     };
 
+    /**
+     * Take a step towards bringing a piece of food back.
+     *
+     * Take a step towards brining a piece of food this ant picked up back to
+     * its nest (center of the grid).
+     *
+     * @param {ants_grid.AntsGrid} grid The grid to take a step on.
+    **/
     this.returnHome = function(grid)
     {
         if(xPos == constants.GRID_X_CENTER && yPos == constants.GRID_Y_CENTER)
@@ -39,6 +72,12 @@ function Ant(xPos, yPos)
             yPos++;
     };
 
+    /**
+     * Take a pheromone-following / random walk to find food.
+     *
+     * @param {ants_grid.AntsGrid} grid The grid to take a step on.
+     * @param {float} Random value between [0, 1).
+    **/
     this.explore = function(grid, randVal)
     {
         var selectedDirection = -1;
@@ -46,14 +85,14 @@ function Ant(xPos, yPos)
         var weightedRand;
         var totalPheremoneValue;
 
-        var availableSpacesInfo = this.findAvailableSpaces(grid, true);
+        var availableSpacesInfo = this.findPossibleSpaces(grid, true);
         totalPheremoneValue = availableSpacesInfo[0];
         availableSpaces = availableSpacesInfo[1];
 
         if(availableSpaces.length == 0)
             return;
 
-        recentLocs.push(grid.getPosIndex(xPos, yPos));
+        recntLocs.push(grid.getPosIndex(xPos, yPos));
 
         weightedRand = randVal * totalPheremoneValue;
         for(var i in availableSpaces)
@@ -69,7 +108,21 @@ function Ant(xPos, yPos)
         this.checkForFood(grid);
     };
 
-    this.findAvailableSpaces = function(grid, checkingRecent)
+    /**
+     * Find the spaces where this ant can step next.
+     *
+     * @param {ants_grid.AntsGrid} grid The grid the ant is on.
+     * @param {bool} avoidRec Avoid the last five locations this ant has
+     *      visited.
+     * @return {Array} Array of 2 element arrays of form
+     *      [totalPheremoneValue, availableSpaces] where totalPheremoneValue is
+     *      sum of the pheromone that surrounding this ant and availableSpaces
+     *      is an array of form [probability, constants.*_INDEX] where
+     *      probability is the weighted probability that the ant should go in
+     *      the corresponding direction indicated by UP_INDEX, RIGHT_INDEX,
+     *      DOWN_INDEX, or LEFT_INDEX.
+    **/
+    this.findPossibleSpaces = function(grid, avoidRec)
     {
         var surroundingValues = grid.getSurroundingPheremoneValues(xPos, yPos);
         var availableSpaces = new Array();
@@ -90,21 +143,31 @@ function Ant(xPos, yPos)
             availableSpaces.push([totalPheremoneValue, index]);
         }
 
-        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos, yPos-1)) == -1)
+        // TODO: Breaking style here
+        if(!avoidRec || recntLocs.indexOf(grid.getPosIndex(xPos, yPos-1)) == -1)
             includeSpace(constants.UP_INDEX);
-        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos+1, yPos)) == -1)
+        if(!avoidRec || recntLocs.indexOf(grid.getPosIndex(xPos+1, yPos)) == -1)
             includeSpace(constants.RIGHT_INDEX);
-        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos, yPos+1)) == -1)
+        if(!avoidRec || recntLocs.indexOf(grid.getPosIndex(xPos, yPos+1)) == -1)
             includeSpace(constants.DOWN_INDEX);
-        if(!checkingRecent || recentLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
+        if(!avoidRec || recntLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
             includeSpace(constants.LEFT_INDEX);
 
         if(availableSpaces.length > 0 || !checkingRecent)
             return [totalPheremoneValue, availableSpaces];
         else
-            return this.findAvailableSpaces(grid, false);
+            return this.findPossibleSpaces(grid, false);
     };
 
+    /**
+     * Move towards a given direction.
+     *
+     * Move this steering-like agent (steering agent with 90deg granularity)
+     * towards a given direction.
+     *
+     * @param {int} direction Directional constant to move towards from
+     *      constants (UP_INDEX, RIGHT_INDEX, DOWN_INDEX, LEFT_INDEX).
+    **/
     this.moveDirection = function(direction)
     {
         if(facingDirection == -1)
@@ -147,6 +210,9 @@ function Ant(xPos, yPos)
         }
     };
 
+    /**
+     * Move towards facing north / up
+    **/
     this.faceUp = function()
     {
         if(facingDirection == constants.DOWN_INDEX)
@@ -155,6 +221,9 @@ function Ant(xPos, yPos)
             facingDirection = constants.UP_INDEX;
     }
 
+    /**
+     * Move towards facing right / west
+    **/
     this.faceRight = function()
     {
         if(facingDirection == constants.LEFT_INDEX)
@@ -163,6 +232,9 @@ function Ant(xPos, yPos)
             facingDirection = constants.RIGHT_INDEX;
     }
 
+    /**
+     * Move towards facing south / down
+    **/
     this.faceDown = function()
     {
         if(facingDirection == constants.UP_INDEX)
@@ -171,6 +243,9 @@ function Ant(xPos, yPos)
             facingDirection = constants.DOWN_INDEX;
     }
 
+    /**
+     * Move towards facing west / left
+    **/
     this.faceLeft = function()
     {
         if(facingDirection == constants.RIGHT_INDEX)
@@ -179,11 +254,14 @@ function Ant(xPos, yPos)
             facingDirection = constants.LEFT_INDEX;
     }
 
+    /**
+     * Check to see if this ant has found food.
+    **/
     this.checkForFood = function(grid)
     {
-        for(var y=yPos-2; y<yPos+2; y++)
+        for(var y=yPos-constants.FOOD_RAD; y<yPos+constants.FOOD_RAD; y++)
         {
-            for(var x=xPos-2; x<xPos+2; x++)
+            for(var x=xPos-constants.FOOD_RAD; x<xPos+constants.FOOD_RAD; x++)
             {
                 if(grid.getPosFoodValue(x, y) > 0)
                 {
@@ -194,28 +272,50 @@ function Ant(xPos, yPos)
         }
     };
 
+    /**
+     * Get this ant's current x position.
+     *
+     * @return {int} The current x coordinate of this ant.
+    **/
     this.getXPos = function()
     {
         return xPos;
     };
 
+    /**
+     * Get this ant's current y position.
+     *
+     * @return {int} The current y coordinate of this ant.
+    **/
     this.getYPos = function()
     {
         return yPos;
     };
 
+    /**
+     * Set the returning / food finding state of this ant.
+     *
+     * @param {bool} newReturning true if the ant should be returning with food
+     *      and false if the ant should be looking for food.
+    **/
     this.debugSetState = function(newReturning)
     {
         returning = newReturning;
     };
 
+    /**
+     * Determine if this ant is looking for food or returning with food.
+     *
+     * @return {bool} true if the ant is returning with food and false if the
+     *      ant is looking for food.
+    **/
     this.debugIsReturning = function()
     {
         return returning;
     };
 
     var returning = false;
-    var recentLocs = new cbuffer.CBuffer(5);
+    var recntLocs = new cbuffer.CBuffer(5);
     var facingDirection = -1;
 }
 
