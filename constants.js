@@ -13,7 +13,7 @@ var usingNode = typeof window === 'undefined';
 var constants = {};
 
 var EVAPORATION_RATE = 0.0025;
-var MAX_PHEREMONE_VALUE = 2;
+var MAX_PHEREMONE_VALUE = 1.5;
 var MIN_PHEREMONE_VALUE = 0;
 
 var MIN_PHEREMONE_VALUE_CHANCE = 0.01;
