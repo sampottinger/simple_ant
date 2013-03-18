@@ -1,4 +1,4 @@
-h1. Ant-based Resource Gathering Simulation
+h1. Ant-inspired Resource Gathering Simulation
 
 (c) 2013 "Sam Pottinger":http://gleap.org
 Released under the "GNU GPL v3":http://www.gnu.org/licenses/gpl.html license.
@@ -15,7 +15,7 @@ Of course, if simulations can model ant hills, man-made systems can leverage the
 
 h2. Model Description
 
-The ant-inspired automata begin by a weighted random walk through adjacent spaces where they are more likely to go to locations with higher pheromone values. When an "ant" finds food, it brings a piece of it to the center of the grid (the nest) and leaves a pheromone trail behind it to encourage other ants to visit the same food source.
+These ant-inspired automata begin by a weighted random walk through adjacent spaces where they are more likely to go to locations with higher pheromone values. When an "ant" finds food, it brings a piece of it to the center of the grid (the nest) and leaves a pheromone trail behind it to encourage other ants to visit the same food source.
 
 
 h2. Visual Representation
