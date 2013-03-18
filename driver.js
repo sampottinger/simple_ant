@@ -1,4 +1,16 @@
+/**
+ * Initialization / orchestration for ant-inspired automata.
+ *
+ * Initialization / orchestration for a pheremone-based internally optimizing
+ * resource gathering network simulation.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
+
 var usingNode = typeof window === 'undefined';
+
 
 if(usingNode)
 {
@@ -8,14 +20,34 @@ if(usingNode)
     var view = require("./view");
 }
 
+
 var ants = new Array();
 var grid;
 
+
+/**
+ * Generate a random integer.
+ *
+ * Generate a random integer in the range from the provided minimum (inclusive)
+ * to the provided maximum (exclusive).
+ *
+ * @param {int} min The minimum integer that should be generated.
+ * @param {int} max The maximum integer plus one that should be generated.
+ * @return {int} Randomly generated integer within provided integer range.
+**/
 var randInt = function(min, max)
 {
     return Math.floor(Math.random() * (max - min) + min);
 };
 
+
+/**
+ * Set up the simulation.
+ *
+ * Creates a new simulation, replacing any existing simulation data. This will
+ * initialize new ants and ant grid before scheduling the periodic calling of
+ * takeStep to run the simulation.
+**/
 var initalize = function()
 {
     var newAnt;
@@ -38,6 +70,10 @@ var initalize = function()
     setInterval(takeStep,constants.STEP_DUR);
 };
 
+
+/**
+ * Take one time step in the simulation.
+**/
 var takeStep = function()
 {
     for(var i in ants)

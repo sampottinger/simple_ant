@@ -1,11 +1,30 @@
+/**
+ * Graphical rendering routines for an ant-inspired automaton.
+ *
+ * Methods for displaying the state of a pheromone-based internally optimizing
+ * resource gathering network simulation.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
+
 var usingNode = typeof window === 'undefined';
 var view = {};
+
 
 if(usingNode)
 {
     var constants = require("./constants");
 }
 
+
+/**
+ * Draw the current state of an ant grid along with the ants that are on it.
+ *
+ * @param {ants_grid.AntsGrid} grid The grid to render.
+ * @param {Array} Array of ant.Ant to render.
+**/
 var drawGrid = function(grid, ants)
 {
     var canvas = $(constants.DISPLAY_CANVAS_ID)[0];
@@ -88,6 +107,7 @@ var drawGrid = function(grid, ants)
         );
     }
 };
+
 
 if(usingNode)
 {

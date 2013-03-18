@@ -1,7 +1,8 @@
 /**
  * Logic for an ant-inspired automaton.
  * 
- * Logic for a pheremone-based internally optimizing resource gathering network.
+ * Logic for an automaton that does actuation for a pheromone-based internally
+ * optimizing resource gathering network simulation.
  *
  * @author Sam Pottinger
  * @license GNU GPL v3
@@ -153,7 +154,7 @@ function Ant(xPos, yPos)
         if(!avoidRec || recntLocs.indexOf(grid.getPosIndex(xPos-1, yPos)) == -1)
             includeSpace(constants.LEFT_INDEX);
 
-        if(availableSpaces.length > 0 || !checkingRecent)
+        if(availableSpaces.length > 0 || !avoidRec)
             return [totalPheremoneValue, availableSpaces];
         else
             return this.findPossibleSpaces(grid, false);

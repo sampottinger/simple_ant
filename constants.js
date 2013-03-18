@@ -1,3 +1,14 @@
+/**
+ * Constants defining a resource gathering network optimization simulation.
+ *
+ * Constants defining the parameters / behavior of an ants-inspired
+ * automata / agent-based resource gathering network optimization simulation
+ * inspired by ants.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
 var usingNode = typeof window === 'undefined';
 var constants = {};
 

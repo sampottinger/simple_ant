@@ -1,8 +1,25 @@
+/**
+ * Unit testing for an ant-inspired automaton.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
+
 var constants = require("./constants");
 var ants_grid = require("./ants_grid");
 var ant = require("./ant");
 var test_util = require("./test_util");
 
+
+/**
+ * Check that an ant is in an expected position.
+ *
+ * @param {nodeunit:test} test The test to run this check as.
+ * @param {ant.Ant} ant The ant to check.
+ * @param {int} xPos The x coordinate the ant should be at.
+ * @param {int} yPos The y coordinate the ant should be at.
+**/
 var checkAntPos = function(test, ant, xPos, yPos)
 {
     test.equal(ant.getXPos(), xPos);
