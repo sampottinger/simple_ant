@@ -43,7 +43,7 @@ var createTestGrid = function()
 **/
 var testFloatEqual = function(test, received, expected)
 {
-    test.ok(Math.abs(recieved-expected) < 0.001);
+    test.ok(Math.abs(received-expected) < 0.001);
 };
 
 

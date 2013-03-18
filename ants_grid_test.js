@@ -1,7 +1,25 @@
+/**
+ * Unit test ant grid logic for an ant-based automaton simulation.
+ *
+ * Unit tests for the behavior of a pheremone / food grid for an ants-inspired
+ * automata / agent-based resource gathering network optimization simulation
+ * inspired by ants.
+ *
+ * @author Sam Pottinger
+ * @license GNU GPL v3
+**/
+
+
 var constants = require("./constants");
 var ants_grid = require("./ants_grid");
 var test_util = require("./test_util");
 
+
+/**
+ * Test setting and getting simple pheromone values.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testSimplePheremoneValue = function(test)
 {
     var grid = new ants_grid.AntsGrid(1, 1);
@@ -15,6 +33,12 @@ exports.testSimplePheremoneValue = function(test)
     test.done();
 };
 
+
+/**
+ * Test setting and getting simple food values.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testSimpleFoodValue = function(test)
 {
     var grid = new ants_grid.AntsGrid(1, 1);
@@ -28,6 +52,12 @@ exports.testSimpleFoodValue = function(test)
     test.done();
 };
 
+
+/**
+ * Test evaporating old pheromone values;
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testEvaporate = function(test)
 {
     var grid = new ants_grid.AntsGrid(2, 2);
@@ -45,6 +75,12 @@ exports.testEvaporate = function(test)
     test.done();
 };
 
+
+/**
+ * Test finding spaces around a given coordinate and their pheromone values.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testGetSurroundingPheremoneValues = function(test)
 {
     var grid = test_util.createTestGrid();
@@ -58,6 +94,15 @@ exports.testGetSurroundingPheremoneValues = function(test)
     test.done();
 };
 
+
+/**
+ * Test finding edge spaces around a coordinate and their pheromone values.
+ *
+ * Test finding spaces surrounding an "edge" space and those spaces' pheromone
+ * values.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testGetSurroundingPheremoneValuesEdge = function(test)
 {
     var grid = test_util.createTestGrid();
@@ -71,6 +116,12 @@ exports.testGetSurroundingPheremoneValuesEdge = function(test)
     test.done();
 };
 
+
+/**
+ * Test changing the pheromone values of a section of a ants_grid.AntsGrid.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testChangeAreaPheremoneValue = function(test)
 {
     var grid = test_util.createTestGrid();
@@ -89,6 +140,15 @@ exports.testChangeAreaPheremoneValue = function(test)
     test.done();
 };
 
+
+/**
+ * Test changing the pheromone values of an edge section of an AntsGrid.
+ *
+ * Test changing the pheromone values of an area where part of that area doesn't
+ * exist on this grid.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testChangeAreaPheremoneValueEdge = function(test)
 {
     var grid = test_util.createTestGrid();
@@ -107,6 +167,15 @@ exports.testChangeAreaPheremoneValueEdge = function(test)
     test.done();
 };
 
+
+/**
+ * Test adding new pheromone to a grid.
+ * 
+ * Test adding new pheromone to a grid such that the pheromone spreads out with
+ * decay.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/ 
 exports.testChangeAreaPheremoneValueDecay = function(test)
 {
     var grid = new ants_grid.AntsGrid(7, 7);

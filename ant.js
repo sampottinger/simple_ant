@@ -278,6 +278,14 @@ function Ant(xPos, yPos)
         }
     };
 
+    /**
+     * Determine how many steps this ant has left before it returns home.
+     *
+     * Determine how many steps this ant has left before it reaches the center
+     * of the grid, walking directly to that center.
+     *
+     * @return {int} Number of steps before this ant reaches home.
+    **/
     this.calculateStepsTillHome = function()
     {
         var deltaX = Math.abs(constants.GRID_X_CENTER - xPos);
@@ -328,9 +336,14 @@ function Ant(xPos, yPos)
     };
 
     var returning = false;
-    var recntLocs = new cbuffer.CBuffer(5);
+    var recntLocs;
     var facingDirection = -1;
     var stepsRemainingTillHome = 0;
+
+    if(usingNode)
+        recntLocs = new Array();
+    else
+        recntLocs = new cbuffer.CBuffer(5);
 }
 
 if(usingNode)

@@ -26,6 +26,12 @@ var checkAntPos = function(test, ant, xPos, yPos)
     test.equal(ant.getYPos(), yPos);
 }
 
+
+/**
+ * Test checking that an ant responds correctly to food.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testCheckForFood = function(test)
 {
     var testGrid = new ants_grid.AntsGrid(1, 1);
@@ -42,17 +48,22 @@ exports.testCheckForFood = function(test)
     test.done();
 };
 
+
+/**
+ * Test that an ant moves in the correct direction.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testMoveDirection = function(test)
 {
     var testAnt = new ant.Ant(1, 1);
-
     testAnt.moveDirection(constants.UP_INDEX);
     checkAntPos(test, testAnt, 1, 0);
 
-    testAnt.moveDirection(constants.DOWN_INDEX);
-    checkAntPos(test, testAnt, 1, 1);
-
     testAnt.moveDirection(constants.LEFT_INDEX);
+    checkAntPos(test, testAnt, 0, 0);
+
+    testAnt.moveDirection(constants.DOWN_INDEX);
     checkAntPos(test, testAnt, 0, 1);
 
     testAnt.moveDirection(constants.RIGHT_INDEX);
@@ -61,12 +72,18 @@ exports.testMoveDirection = function(test)
     test.done();
 };
 
+
+/**
+ * Test that an ant finds the correct spaces it can move to.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testFindAvailableSpaces = function(test)
 {
     var testAnt = new ant.Ant(1, 1);
     var testGrid = test_util.createTestGrid();
 
-    var availableSpaceInfo = testAnt.findAvailableSpaces(testGrid);
+    var availableSpaceInfo = testAnt.findPossibleSpaces(testGrid);
     var totalPheremoneVal = availableSpaceInfo[0];
     var availableSpaces = availableSpaceInfo[1];
 
@@ -87,12 +104,18 @@ exports.testFindAvailableSpaces = function(test)
     test.done();
 };
 
+
+/**
+ * Test that an ant finds the correct spaces it can move to when on a grid edge.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testFindAvailableSpacesEdge = function(test)
 {
     var testAnt = new ant.Ant(0, 0);
     var testGrid = test_util.createTestGrid();
 
-    var availableSpaceInfo = testAnt.findAvailableSpaces(testGrid);
+    var availableSpaceInfo = testAnt.findPossibleSpaces(testGrid);
     var totalPheremoneVal = availableSpaceInfo[0];
     var availableSpaces = availableSpaceInfo[1];
 
@@ -112,6 +135,12 @@ exports.testFindAvailableSpacesEdge = function(test)
     test.done();
 };
 
+
+/**
+ * Test taking a step in exploring for food.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testExplore = function(test)
 {
     var testAnt = new ant.Ant(1, 1);
@@ -122,36 +151,34 @@ exports.testExplore = function(test)
     testGrid.changePosFoodValue(1, 2, 1);
 
     testAnt.explore(testGrid, testRandVal);
-    pathOut = testAnt.debugGetPathOut();
 
     checkAntPos(test, testAnt, 1, 2);
     test.equal(testGrid.getPosFoodValue(2, 1), 0);
     test.ok(testAnt.debugIsReturning());
-    test.equal(pathOut.length, 1);
-    test.equal(pathOut[0][0], 1);
-    test.equal(pathOut[0][1], 1);
 
     test.done();
 };
 
+
+/**
+ * Test an ant taking a step towards returning to the center of the grid.
+ *
+ * @param {nodeunit:test} The test to execute this routine as part of.
+**/
 exports.testReturnHome = function(test)
 {
     var testAnt = new ant.Ant(2, 1);
     var testGrid = test_util.createTestGrid();
-
-    testAnt.debugPushToPathOut([0, 1]);
-    testAnt.debugPushToPathOut([1, 1]);
-    testAnt.debugSetState(true);
 
     testAnt.returnHome(testGrid);
 
     test_util.testFloatEqual(
         test,
         testGrid.getPosPheremoneValue(2, 1),
-        0.7
+        1.5
     );
 
-    checkAntPos(test, testAnt, 1, 1);
+    checkAntPos(test, testAnt, 3, 2);
 
     test.done();
 };

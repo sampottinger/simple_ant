@@ -252,5 +252,14 @@ else global.CBuffer = CBuffer;
 
 }(this));
 
+var usingNode = typeof window === 'undefined';
 var cbuffer = {};
-cbuffer.CBuffer = CBuffer;
+
+if(usingNode)
+{
+	exports.CBuffer = global.CBuffer;
+}
+else
+{
+	cbuffer.CBuffer = CBuffer;
+}
