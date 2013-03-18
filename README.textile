@@ -41,4 +41,4 @@ All automated unit tests can be run via:
 
 h2. Technologies and Resources Used
 
-Uses "Ants at Work: How an Insect Society is Organized":http://www.amazon.com/Ants-Work-Insect-Society-Organized/dp/0393321320/ as a very general guide. The entire solution runs in JavaScript (ECMAScript), targeting the HTML5 canvas element. Other technologies used include "jQuery":http://jquery.com/ and "Trevor Norris'":https://github.com/trevnorris/cbuffer cbuffer, both released under the "MIT License":http://opensource.org/licenses/MIT
+Uses "Ants at Work: How an Insect Society is Organized":http://www.amazon.com/Ants-Work-Insect-Society-Organized/dp/0393321320/ as a very general guide. The entire solution runs in JavaScript (ECMAScript), targeting the HTML5 canvas element. Other technologies used include "jQuery":http://jquery.com/ and "Trevor Norris'":https://github.com/trevnorris/cbuffer cbuffer, both released under the "MIT License":http://opensource.org/licenses/MIT.
