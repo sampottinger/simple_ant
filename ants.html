@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>Ant-inspired Resource Gathering Simulation</title>
         <script type="text/javascript" src="jquery-min.js"></script>
         <script type="text/javascript" src="cbuffer.js"></script>
         <script type="text/javascript" src="ant.js"></script>
@@ -7,10 +8,69 @@
         <script type="text/javascript" src="constants.js"></script>
         <script type="text/javascript" src="driver.js"></script>
         <script type="text/javascript" src="view.js"></script>
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="ant.css">
     </head>
     <body>
-        <canvas id="display-canvas" width="400" height="400">
-            Whoops! It looks like your browser doesn't support canvas.
-        </canvas>
+        <div id="info-bar">
+            This is part of gleap.org, Sam Pottinger's professional homepage. <a href="http://gleap.org">Return to main site</a>.
+        </div>
+        <h1>Ant-inspired Resource Gathering Simulation</h1>
+        <div class="row">
+            <div class="span6" id="canvas-container">
+                <canvas id="display-canvas" width="400" height="400">
+                    Whoops! It looks like your browser doesn't support canvas.
+                </canvas>
+            </div>
+            <div class="span9" id="description-container">
+                <h3>What is This?</h3>
+                <p>
+                    These ant-like creatures, being a highly simplified model of an ant-hill, create optimized resource gathering networks without any central authority. There isn't a king, queen, or commander that tells the ants where the food sources are and the ants can't see the whole grid but, through chemical messengers called pheromones, these virtual creatures still find food and coordinate their actions.
+                </p>
+                <h3>Background and Motivation</h3>
+                <p>
+                    Ant hills, as described by Deborah Gordon, self-organize to create complex adaptive systems optimized to gather materials from various surrounding food sources. Ants, the agents in this complex system, do not have a gloval view of the system but can communicate with each other via pheromones. This simulation takes that idea of ant-like agents coordinating optimized resource gathering networks.
+                </p>
+                <p>
+                    Of course, if simulations can model ant hills, man-made systems can leverage the same optimization behavior to create better networks for gathering resources, physical transportation, etc.
+                </p>
+                <h3>Visual Representation</h3>
+                <p>
+                    The simulation uses the following color coding scheme:
+                    <ul>
+                        <li>
+                            Green squares contain pheromone.
+                        </li>
+                        <li>
+                            Grey squares are food sources.
+                        </li>
+                        <li>
+                            Red circles indiciate how much food remains at a food source.
+                        </li>
+                        <li>
+                            White squares are empty.
+                        </li>
+                        <li>
+                            Black squares are occupied by an “ant” automaton.
+                        </li>
+                    </ul>
+                </p>
+                <h3>Model Description</h3>
+                <p>
+                    These ant-inspired automata begin by a weighted random walk through adjacent spaces where they are more likely to go to locations with higher pheromone values. When an “ant” finds food, it brings a piece of it to the center of the grid (the nest) and leaves a pheromone trail behind it to encourage other ants to visit the same food source.
+                </p>
+                <h3>Source / More Info</h3>
+                <p>
+                    See <a href="https://github.com/Samnsparky/simple_ant">https://github.com/Samnsparky/simple_ant</a>.
+                </p>
+                <p>
+                    (c) 2013 <a href="http://gleap.org">Sam Pottinger</a>. <br>
+                    Released under the <a href="http://www.gnu.org/licenses/gpl.html">GNU GPL v3 license</a>. <br>
+                    Done for <a href="http://www.colorado.edu/cs/">CU Boulder</a> CSCI 4900. <br>
+                    Software Engineering, Emergence, and Complex Adaptive Sys. <br>
+                    Produced under the guidance of <a href="http://www.cs.colorado.edu/~kena/">Professor Ken Anderson</a>. <br>
+                    This presentation uses <a href="http://twitter.github.com/bootstrap/index.html">Bootstrap</a> and <a href="http://jquery.com/">jQuery</a>. The simulation leverages <a href="http://trevorjnorris.com/">Trevor Norris'</a> <a href="https://github.com/trevnorris/cbuffer">cbuffer</a>.
+                </p>
+            </div>
     </body>
 </html>
