@@ -1,0 +1,44 @@
+h1. Ant-based Resource Gathering Simulation
+
+(c) 2013 "Sam Pottinger":http://gleap.org
+Released under the "GNU GPL v3":http://www.gnu.org/licenses/gpl.html license.
+Done for "CU Boulder":http://www.colorado.edu/cs/ CSCI 4900 - Independent Study (Software Engineering, Emergence, and Complex Adaptive Sys.)
+Produced under the guidance of "Professor Ken Anderson":http://www.cs.colorado.edu/~kena/
+
+
+h2. Background and Motivation
+
+Ant hills, as described by "Deborah Gordon":http://www.stanford.edu/~dmgordon/, self-organize to create complex adaptive systems optimized to gather materials from various surrounding food sources. Ants, the agents in this complex system, do not have a gloval view of the system but can communicate with each other via pheromones. This simulation takes that idea of ant-like agents coordinating optimized resource gathering networks.
+
+Of course, if simulations can model ant hills, man-made systems can leverage the same optimization behavior to create better networks for gathering resources, physical transportation, etc.
+
+
+h2. Model Description
+
+The ant-inspired automata begin by a weighted random walk through adjacent spaces where they are more likely to go to locations with higher pheromone values. When an "ant" finds food, it brings a piece of it to the center of the grid (the nest) and leaves a pheromone trail behind it to encourage other ants to visit the same food source.
+
+
+h2. Visual Representation
+
+The following color coding scheme is used:
+* Green squares contain pheromone.
+* Grey squares are food sources.
+* Red circles indiciate how much food remains at a food source.
+* White squares are empty.
+* Black squares are occupied by an "ant" automaton.
+
+
+h2. Development Environment and Standards
+
+The development environment requires "Node.js":http://nodejs.org/ and "nodeunit":https://github.com/caolan/nodeunit. Most development operations, including changes to the specific behavior of pheromones, can be performed simply by editing constants.js. Inline documentation follows "JSDoc":http://en.wikipedia.org/wiki/JSDoc standards. However, the use of the "int" and "float" types in documentation is allowed. All lines in .js files should be limited to 80 characters. An 80% code coverage requirement should be enforced for all code outside of view logic and code dealing directly with probabilities where dependency injection requirements are deemed too high.
+
+
+h2. Testing
+
+All automated unit tests can be run via:
+@$ nodeunit *_test.js@
+
+
+h2. Technologies and Resources Used
+
+Uses "Ants at Work: How an Insect Society is Organized":http://www.amazon.com/Ants-Work-Insect-Society-Organized/dp/0393321320/ as a very general guide. The entire solution runs in JavaScript (ECMAScript), targeting the HTML5 canvas element. Other technologies used include "jQuery":http://jquery.com/ and "Trevor Norris'":https://github.com/trevnorris/cbuffer cbuffer, both released under the "MIT License":http://opensource.org/licenses/MIT
