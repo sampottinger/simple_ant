@@ -56,10 +56,12 @@ function Ant(xPos, yPos)
         if(xPos == constants.GRID_X_CENTER && yPos == constants.GRID_Y_CENTER)
             returning = false;
 
+        var phereOffset = constants.EVAPORATION_RATE * stepsRemainingTillHome;
+
         grid.changeAreaPheremoneValueDecay(
             xPos,
             yPos,
-            constants.ANT_ADD_PHEREMONE_AMT,
+            constants.ANT_ADD_PHEREMONE_AMT + phereOffset,
             constants.PHEREMONE_DISPERSE_DECAY
         );
 
@@ -71,6 +73,8 @@ function Ant(xPos, yPos)
             yPos--;
         if(yPos < constants.GRID_Y_CENTER)
             yPos++;
+
+        stepsRemainingTillHome--;
     };
 
     /**
@@ -268,10 +272,18 @@ function Ant(xPos, yPos)
                 {
                     grid.changePosFoodValue(x, y, -1);
                     returning = true;
+                    stepsRemainingTillHome = this.calculateStepsTillHome();
                 }
             }
         }
     };
+
+    this.calculateStepsTillHome = function()
+    {
+        var deltaX = Math.abs(constants.GRID_X_CENTER - xPos);
+        var deltaY = Math.abs(constants.GRID_Y_CENTER - yPos);
+        return Math.max(deltaX, deltaY);
+    }
 
     /**
      * Get this ant's current x position.
@@ -318,6 +330,7 @@ function Ant(xPos, yPos)
     var returning = false;
     var recntLocs = new cbuffer.CBuffer(5);
     var facingDirection = -1;
+    var stepsRemainingTillHome = 0;
 }
 
 if(usingNode)
